@@ -62,6 +62,8 @@ export function SearchPage() {
 
   const href = (p: number, r: Range = range) => `/search?q=${encodeURIComponent(kw)}&range=${r}${p > 1 ? `&page=${p}` : ''}`;
   const total = q.data?.total ?? 0;
+    /* First request pending: show loading instead of "Found 0 results" */
+    const loading = Boolean(kw) && q.isPending;
   const ranges: { k: Range; label: string }[] = [
     { k: 'thread', label: t('search_range_thread') },
     { k: 'all', label: t('search_range_all') },
@@ -127,13 +129,18 @@ export function SearchPage() {
           <CardTitle>
             {kw ? t('search_results_for', { keyword: kw }) : t('search')}
             <span className="text-xs font-normal text-lt-grey">
-              {kw ? t('search_result_count', { count: total }) : t('enter_keyword')}
+              {kw ? (loading ? t('loading') : t('search_result_count', { count: total })) : t('enter_keyword')}
             </span>
           </CardTitle>
         }
         bodyClass="p-0"
       >
         {q.isError && <p className="px-5 py-6 text-center text-sm text-destructive">{(q.error as Error).message}</p>}
+        {loading && (
+                  <div className="py-10 text-center text-lt-grey">
+            <p className="mt-2">{t('loading')}</p>                  
+                  </div>
+                )}
         {q.data && total > 0 && range === 'user' && (
           <ul className="m-0 list-none p-0">
             {q.data.users.map((u) => (
