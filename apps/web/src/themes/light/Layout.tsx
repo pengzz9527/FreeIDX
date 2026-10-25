@@ -369,7 +369,7 @@ export function Layout({ children }: { children?: ReactNode }) {
     e.preventDefault();
     const q = kw.trim();
     setDrawer(false);
-    navigate(q ? `/search?q=${encodeURIComponent(q)}` : '/search');
+        navigate(q ? `/search?q=${encodeURIComponent(q)}&range=thread` : '/search');
   };
 
   const homeActive = pathname === '/' || pathname.startsWith('/page');
